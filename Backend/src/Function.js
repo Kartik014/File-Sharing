@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 const Model = require('./models/Model')
-const database = require('./database/fetchDetails')
+const database = require('./database/fetchDetails_users')
 
 exports.signUp = async (req, res) => {
 
@@ -83,7 +83,6 @@ exports.getAllUsers = async (req, res) => {
         })
 
     }
-
 }
 
 exports.getUserDetails = async (req, res) => {
@@ -106,6 +105,7 @@ exports.getUserDetails = async (req, res) => {
 }
 
 exports.UploadFile = async (req, res) => {
+
     try {
 
         const user = await database.getUserInfo(req)

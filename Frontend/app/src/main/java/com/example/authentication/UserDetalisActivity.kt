@@ -23,5 +23,9 @@ class UserDetalisActivity : AppCompatActivity() {
         binding.name.text = name.toString()
         binding.email.text = email.toString()
         binding.id.text = id.toString()
+
+        binding.showFiles.setOnClickListener {
+            
+        }
     }
 }

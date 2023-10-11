@@ -4,7 +4,7 @@ const { MongoClient } = require('mongodb')
 
 const dataBase = process.env.DATABASE
 const dbName = process.env.DATABASE_NAME
-const collectionName = process.env.COLLECTION_NAME
+const collectionName = process.env.FILE_COLLECTION_NAME
 
 const client = new MongoClient(dataBase, {
     useNewUrlParser: true,

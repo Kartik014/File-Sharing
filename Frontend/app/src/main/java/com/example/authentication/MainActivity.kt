@@ -81,8 +81,7 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onFailure(call: Call<userNames>, t: Throwable) {
                     Log.d("ERROR", "${t.message}")
-                    Toast.makeText(this@MainActivity, "Error in fetching data", Toast.LENGTH_LONG)
-                        .show()
+                    Toast.makeText(this@MainActivity, "Error in fetching data", Toast.LENGTH_LONG).show()
                 }
 
             })
