@@ -23,4 +23,10 @@ interface ApiService {
 
     @POST("UploadFile/")
     fun uploadFile(@Body request: uploadFileClass): Call<ResponseMessage>
+
+    @POST("getFiles/")
+    fun getFileDetails(@Body request: UserName): Call<fileNames>
+
+    @POST("downloadFile/")
+    fun downloadFile(@Body request: fileDownloadBody): Call<downloadResponse>
 }

@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var userNameAdapter: userNameAdapter
     private lateinit var userList: List<String>
+    private lateinit var userName: String
 
     private val pickImageLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -34,22 +35,23 @@ class MainActivity : AppCompatActivity() {
                 val fileName = getFileName(selectedImageUri)
                 val fileExtension = getFileExtension(selectedImageUri)
 
-                val uploadFileData = uploadFileClass("Kartik Agarwal", fileName, fileExtension, base64Image)
-                RetrofitBuilder.api.uploadFile(uploadFileData).enqueue(object: Callback<ResponseMessage> {
-                    override fun onResponse(
-                        call: Call<ResponseMessage>,
-                        response: Response<ResponseMessage>,
-                    ) {
-                        if(response.code() == 200){
-                            Log.d("DETAILS", "DATA: ${response.body()!!.message}")
+                val uploadFileData = uploadFileClass(userName.toString(), fileName, fileExtension, base64Image)
+                RetrofitBuilder.api.uploadFile(uploadFileData)
+                    .enqueue(object : Callback<ResponseMessage> {
+                        override fun onResponse(
+                            call: Call<ResponseMessage>,
+                            response: Response<ResponseMessage>,
+                        ) {
+                            if (response.code() == 200) {
+                                Log.d("DETAILS", "DATA: ${response.body()!!.message}")
+                            }
                         }
-                    }
 
-                    override fun onFailure(call: Call<ResponseMessage>, t: Throwable) {
-                        Log.d("ERROR", "ERROR: ${t.message}")
-                    }
+                        override fun onFailure(call: Call<ResponseMessage>, t: Throwable) {
+                            Log.d("ERROR", "ERROR: ${t.message}")
+                        }
 
-                })
+                    })
             }
         }
     }
@@ -61,6 +63,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         userList = ArrayList()
+        userName = intent.getStringExtra("userName").toString()
 
         binding.fetchData.setOnClickListener {
             RetrofitBuilder.api.getAllUsers().enqueue(object : Callback<userNames> {
@@ -126,6 +129,7 @@ class MainActivity : AppCompatActivity() {
         if (result.isEmpty()) {
             result = uri.lastPathSegment ?: ""
         }
+        Log.d("RESULT", "${result}")
         return result
     }
 }

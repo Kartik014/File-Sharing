@@ -33,8 +33,8 @@ class LogIn : AppCompatActivity() {
                 ) {
                     if(response.code() == 200) {
                         Toast.makeText(this@LogIn, response.body()!!.message, Toast.LENGTH_LONG).show()
-                        Log.d("MESSAGE", response.body()!!.message)
                         val intent = Intent(this@LogIn, MainActivity::class.java)
+                        intent.putExtra("userName",response.body()!!.name)
                         startActivity(intent)
                     } else {
                         Log.d("MESSAGE", response.body()!!.message)
