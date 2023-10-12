@@ -11,9 +11,9 @@ const client = new MongoClient(dataBase, {
     useUnifiedTopology: true
 })
 
-exports.fetchAllDetails = async (req, res) => {
+exports.fetchFileName = async (req, res) => {
 
-    const userNames = []
+    const fileNames = []
 
     try {
 
@@ -22,13 +22,13 @@ exports.fetchAllDetails = async (req, res) => {
         const db = client.db(dbName)
         const collection = db.collection(collectionName)
 
-        const cursor = collection.find({})
+        const cursor = collection.find({ uploaderName: req.body.name })
 
-        await cursor.forEach(user => {
-            userNames.push(user.name)
+        await cursor.forEach(file => {
+            fileNames.push(file.fileName)
         })
 
-        return userNames
+        return fileNames
 
     } catch (err) {
         console.error(err)
@@ -37,7 +37,7 @@ exports.fetchAllDetails = async (req, res) => {
     }
 }
 
-exports.getUserInfo = async (req, res) => {
+exports.downloadFile = async (req, res) => {
 
     try {
 
@@ -46,11 +46,11 @@ exports.getUserInfo = async (req, res) => {
         const db = client.db(dbName)
         const collection = db.collection(collectionName)
 
-        const projection = { _id: 0, password: 0 }
+        const projection = { uploaderName: 0, fileName: 0, extension: 0, id: 0, _id: 0 }
 
-        const user = await collection.findOne({ name: req.body.name }, { projection })
+        const fileData = await collection.findOne({ uploaderName: req.body.name, fileName: req.body.fileName, id: req.body.id }, { projection })
 
-        return user
+        return fileData
 
     } catch (err) {
         console.error(err)

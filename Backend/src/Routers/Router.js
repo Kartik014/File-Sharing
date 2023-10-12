@@ -23,4 +23,12 @@ apiRouter
     .route('/UploadFile')
     .post(Function.UploadFile)
 
+apiRouter
+    .route('/getFiles')
+    .post(Function.getFileDetails)
+
+apiRouter
+    .route('/downloadFile')
+    .post(Function.downloadFile)
+
 module.exports = apiRouter

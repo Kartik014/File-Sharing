@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const Model = require('./models/Model')
-const database = require('./database/fetchDetails_users')
+const user_database = require('./database/fetchDetails_users')
+const file_database = require('./database/fetchDetails_userFiles')
 
 exports.signUp = async (req, res) => {
 
@@ -55,7 +56,8 @@ exports.logIn = async (req, res) => {
 
         res.status(200).json({
             status: "User logged In successfully",
-            message: "LogIn Successful"
+            message: "LogIn Successful",
+            name: user.name
         })
 
     } catch (err) {
@@ -70,7 +72,7 @@ exports.logIn = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
 
     try {
-        const userNames = await database.fetchAllDetails()
+        const userNames = await user_database.fetchAllDetails()
 
         res.status(200).json({
             userArray: userNames
@@ -88,7 +90,7 @@ exports.getAllUsers = async (req, res) => {
 exports.getUserDetails = async (req, res) => {
 
     try {
-        const user = await database.getUserInfo(req)
+        const user = await user_database.getUserInfo(req)
 
         res.status(200).json({
             status: "Details fetched successfully",
@@ -108,7 +110,7 @@ exports.UploadFile = async (req, res) => {
 
     try {
 
-        const user = await database.getUserInfo(req)
+        const user = await user_database.getUserInfo(req)
 
         const newFile = new Model.UserFileModel({
             id: user.id,
@@ -129,6 +131,47 @@ exports.UploadFile = async (req, res) => {
 
         res.status(404).json({
             status: err.message
+        })
+
+    }
+}
+
+exports.getFileDetails = async(req, res) => {
+    console.log("function called")
+    console.log(req.body.name)
+    try {
+
+        const fileName = await file_database.fetchFileName(req)
+
+        res.status(200).json({
+            status: "File Fetched",
+            fileArray: fileName
+        })
+
+    } catch (err) {
+
+        res.status(405).json({
+            status: err
+        })
+
+    }
+}
+
+exports.downloadFile = async(req, res) => {
+    
+    try {
+        const fileData = await file_database.downloadFile(req)
+
+        console.log("Data:",fileData)
+        res.status(200).json({
+            status: "File download successful",
+            data: fileData
+        })
+
+    } catch (err) {
+
+        res.status(405).json({
+            status: err
         })
 
     }

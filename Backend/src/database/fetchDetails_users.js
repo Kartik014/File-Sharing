@@ -42,6 +42,7 @@ exports.getUserInfo = async (req, res) => {
     try {
 
         await client.connect()
+        console.log("USER NAME: ", req.body.name)
 
         const db = client.db(dbName)
         const collection = db.collection(collectionName)
