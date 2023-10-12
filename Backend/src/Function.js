@@ -162,7 +162,6 @@ exports.downloadFile = async(req, res) => {
     try {
         const fileData = await file_database.downloadFile(req)
 
-        console.log("Data:",fileData)
         res.status(200).json({
             status: "File download successful",
             data: fileData
