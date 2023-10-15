@@ -47,3 +47,23 @@ const UserFileSchema = new mongoose.Schema({
 });
 
 exports.UserFileModel = mongoose.model('UserFiles', UserFileSchema, 'UserFiles')
+
+const connectionSchema = new mongoose.Schema({
+    senderID: {
+        type: Number,
+        required: true
+    },
+    receiverID: {
+        type: Number,
+        required: true
+    },
+    requestSenderName: {
+        type: String
+    },
+    connectionStatus: {
+        type: String,
+        required: true
+    }
+});
+
+exports.connectionModel = mongoose.model('ConnectionInfo', connectionSchema, 'ConnectionInfo')

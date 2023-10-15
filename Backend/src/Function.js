@@ -188,3 +188,73 @@ exports.downloadFile = async(req, res) => {
 
     }
 }
+
+exports.connection_Request = async (req, res) => {
+
+    try {
+
+        const newFile = new Model.connectionModel({
+            senderID: req.body.senderID,
+            receiverID: req.body.receiverID,
+            requestSenderName: req.body.requestSenderName,
+            connectionStatus: "Pending"
+        })
+
+        await newFile.save()
+
+        res.status(200).json({
+            status: "Success",
+            message: "Connection request sent"
+        })
+
+    } catch (err) {
+
+        res.status(403).json({
+            status: "Failed",
+            message: err
+        })
+
+    }
+}
+
+exports.getConnectingNames = async(req, res) => {
+
+    try{
+        console.log("RECEIVERID:",req.body.receiverID)
+        const requestSenderNames = await user_database.getConnectingUsers(req)
+
+        res.status(200).json({
+            status: "Details fetched successfully",
+            userArray: requestSenderNames
+        })
+
+    } catch (err) {
+
+        res.status(404).json({
+            status: "Failed",
+            userArray: err
+        })
+
+    }
+}
+
+exports.connection_Response = async (req, res) => {
+
+    try {
+        
+        const response = await user_database.getConnectionInfo(req)
+
+        res.status(200).json({
+            status: "Success",
+            message: response
+        })
+
+    } catch (err) {
+
+        res.status(404).json({
+            status: "Failed",
+            message: err.message
+        })
+
+    }
+}

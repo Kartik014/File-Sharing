@@ -31,4 +31,16 @@ apiRouter
     .route('/downloadFile')
     .post(Function.downloadFile)
 
+apiRouter
+    .route('/requestConnection')
+    .post(Function.connection_Request)
+
+apiRouter
+    .route('/getConnectingNames')
+    .post(Function.getConnectingNames)
+
+apiRouter
+    .route('/responseConnection')
+    .post(Function.connection_Response)
+
 module.exports = apiRouter
