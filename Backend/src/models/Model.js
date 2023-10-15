@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const userSchema = new mongoose.Schema({
     id: {
         type: Number,
-        default: Date.now()
+        required: true
     },
     name: {
         type: String,
@@ -16,7 +16,10 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+    connections: [{
+        type: Number
+    }]
 });
 
 exports.UserModel = mongoose.model('UserInfo', userSchema, 'UserInfo')

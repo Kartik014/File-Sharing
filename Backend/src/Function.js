@@ -5,10 +5,23 @@ const file_database = require('./database/fetchDetails_userFiles')
 
 exports.signUp = async (req, res) => {
 
+    let id;
+    let isUnique = false;
+
+    while (!isUnique) {
+        id = Math.floor(Math.random() * 1000000);
+        const userWithId = await Model.UserModel.findOne({ id });
+
+        if (!userWithId) {
+            isUnique = true;
+        }
+    }
+
     try {
         const hasedPassword = await bcrypt.hash(req.body.password, 10)
 
         const newUser = new Model.UserModel({
+            id: id,
             name: req.body.name,
             email: req.body.email,
             password: hasedPassword
