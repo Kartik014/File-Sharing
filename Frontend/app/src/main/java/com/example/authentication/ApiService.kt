@@ -29,4 +29,13 @@ interface ApiService {
 
     @POST("downloadFile/")
     fun downloadFile(@Body request: fileDownloadBody): Call<downloadResponse>
+
+    @POST("requestConnection/")
+    fun requestConnection(@Body request: requestConnect): Call<ResponseMessage>
+
+    @POST("getConnectingNames/")
+    fun getConnectingNames(@Body request: getConnectingUserList): Call<userNames>
+
+    @POST("responseConnection/")
+    fun responseConnection(@Body request: requestConnect): Call<ResponseMessage>
 }

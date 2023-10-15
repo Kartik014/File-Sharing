@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var userNameAdapter: userNameAdapter
     private lateinit var userList: List<String>
     private lateinit var userName: String
+    private var id: Long = 0
 
     private val pickImageLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -35,7 +36,7 @@ class MainActivity : AppCompatActivity() {
                 val fileName = getFileName(selectedImageUri)
                 val fileExtension = getFileExtension(selectedImageUri)
 
-                val uploadFileData = uploadFileClass(userName.toString(), fileName, fileExtension, base64Image)
+                val uploadFileData = uploadFileClass(userName, fileName, fileExtension, base64Image)
                 RetrofitBuilder.api.uploadFile(uploadFileData)
                     .enqueue(object : Callback<ResponseMessage> {
                         override fun onResponse(
@@ -65,11 +66,27 @@ class MainActivity : AppCompatActivity() {
         userList = ArrayList()
         userName = intent.getStringExtra("userName").toString()
 
+        val requestDetails = UserName(userName)
+
+        RetrofitBuilder.api.getUserDetails(requestDetails).enqueue(object :Callback<userDetails>{
+            override fun onResponse(call: Call<userDetails>, response: Response<userDetails>) {
+                if(response.code() == 200){
+                    Log.d("DETAILS", "${response.body()!!.userArray}")
+                    id = response.body()!!.userArray.id
+                }
+            }
+
+            override fun onFailure(call: Call<userDetails>, t: Throwable) {
+                Log.d("ERROR", "${t.message}")
+            }
+
+        })
+
         binding.fetchData.setOnClickListener {
             RetrofitBuilder.api.getAllUsers().enqueue(object : Callback<userNames> {
                 override fun onResponse(
                     call: Call<userNames>,
-                    response: retrofit2.Response<userNames>,
+                    response: Response<userNames>,
                 ) {
                     if (response.code() == 200) {
                         val responseBody = response.body()
@@ -94,6 +111,12 @@ class MainActivity : AppCompatActivity() {
         binding.uploadFileButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             pickImageLauncher.launch(intent)
+        }
+
+        binding.requestButton.setOnClickListener {
+            val intent = Intent(this@MainActivity, connectionRequest::class.java)
+            intent.putExtra("receiverID", id)
+            startActivity(intent)
         }
     }
 
