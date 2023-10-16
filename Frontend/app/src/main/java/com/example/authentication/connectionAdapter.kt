@@ -29,7 +29,7 @@ class connectionAdapter(val context: Context,val receiverID: Long, val requested
         holder.requestedUsername.text = requestedUserlist[position]
         val name = requestedUserlist[position]
         var senderID: Long = 0
-        val requestDetails = UserName(name)
+        val requestDetails = UserName(name, 0)
         RetrofitBuilder.api.getUserDetails(requestDetails).enqueue(object :
             Callback<userDetails> {
             override fun onResponse(call: Call<userDetails>, response: Response<userDetails>) {

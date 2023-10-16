@@ -1,7 +1,6 @@
 package com.example.authentication
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Environment
@@ -12,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
 import retrofit2.Callback
@@ -22,7 +20,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class UserFilesAdapter(val context: Context, val userFilesList: List<String>, val name: String, val id: Long) : RecyclerView.Adapter<UserFilesAdapter.userFileViewHolder>() {
+class UserFilesAdapter(val context: Context, val userFilesList: List<String>, val name: String, val id: Long, val receiverID: Long) : RecyclerView.Adapter<UserFilesAdapter.userFileViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): userFileViewHolder {
 
@@ -36,7 +34,7 @@ class UserFilesAdapter(val context: Context, val userFilesList: List<String>, va
         val fileName = userFilesList[position]
 
         holder.fileName.setOnClickListener {
-            val fileDownloadBody = fileDownloadBody(name, id, fileName)
+            val fileDownloadBody = fileDownloadBody(name, receiverID, fileName, id)
 
             RetrofitBuilder.api.downloadFile(fileDownloadBody).enqueue(object: Callback<downloadResponse>{
                 override fun onResponse(

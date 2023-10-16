@@ -26,36 +26,36 @@ class MainActivity : AppCompatActivity() {
     private lateinit var userName: String
     private var id: Long = 0
 
-    private val pickImageLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == RESULT_OK) {
-            val selectedImageUri = result.data?.data
-            if (selectedImageUri != null) {
-                val base64Image = convertImageToBase64(selectedImageUri)
-                val fileName = getFileName(selectedImageUri)
-                val fileExtension = getFileExtension(selectedImageUri)
-
-                val uploadFileData = uploadFileClass(userName, fileName, fileExtension, base64Image)
-                RetrofitBuilder.api.uploadFile(uploadFileData)
-                    .enqueue(object : Callback<ResponseMessage> {
-                        override fun onResponse(
-                            call: Call<ResponseMessage>,
-                            response: Response<ResponseMessage>,
-                        ) {
-                            if (response.code() == 200) {
-                                Log.d("DETAILS", "DATA: ${response.body()!!.message}")
-                            }
-                        }
-
-                        override fun onFailure(call: Call<ResponseMessage>, t: Throwable) {
-                            Log.d("ERROR", "ERROR: ${t.message}")
-                        }
-
-                    })
-            }
-        }
-    }
+//    private val pickImageLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
+//        ActivityResultContracts.StartActivityForResult()
+//    ) { result ->
+//        if (result.resultCode == RESULT_OK) {
+//            val selectedImageUri = result.data?.data
+//            if (selectedImageUri != null) {
+//                val base64Image = convertImageToBase64(selectedImageUri)
+//                val fileName = getFileName(selectedImageUri)
+//                val fileExtension = getFileExtension(selectedImageUri)
+//
+//                val uploadFileData = uploadFileClass(userName, fileName, fileExtension, base64Image)
+//                RetrofitBuilder.api.uploadFile(uploadFileData)
+//                    .enqueue(object : Callback<ResponseMessage> {
+//                        override fun onResponse(
+//                            call: Call<ResponseMessage>,
+//                            response: Response<ResponseMessage>,
+//                        ) {
+//                            if (response.code() == 200) {
+//                                Log.d("DETAILS", "DATA: ${response.body()!!.message}")
+//                            }
+//                        }
+//
+//                        override fun onFailure(call: Call<ResponseMessage>, t: Throwable) {
+//                            Log.d("ERROR", "ERROR: ${t.message}")
+//                        }
+//
+//                    })
+//            }
+//        }
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         userList = ArrayList()
         userName = intent.getStringExtra("userName").toString()
 
-        val requestDetails = UserName(userName)
+        val requestDetails = UserName(userName, 0)
 
         RetrofitBuilder.api.getUserDetails(requestDetails).enqueue(object :Callback<userDetails>{
             override fun onResponse(call: Call<userDetails>, response: Response<userDetails>) {
@@ -108,10 +108,10 @@ class MainActivity : AppCompatActivity() {
         }
         binding.displayFetchedData.layoutManager = LinearLayoutManager(this)
 
-        binding.uploadFileButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            pickImageLauncher.launch(intent)
-        }
+//        binding.uploadFileButton.setOnClickListener {
+//            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+//            pickImageLauncher.launch(intent)
+//        }
 
         binding.requestButton.setOnClickListener {
             val intent = Intent(this@MainActivity, connectionRequest::class.java)
@@ -120,39 +120,39 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun convertImageToBase64(imageUri: Uri): String {
-        val inputStream = contentResolver.openInputStream(imageUri)
-        val bytes = inputStream?.readBytes()
-        inputStream?.close()
-
-        if (bytes != null) {
-            val base64Image = Base64.encodeToString(bytes, Base64.DEFAULT)
-            return base64Image
-        }
-
-        return ""
-    }
-
-    private fun getFileExtension(uri: Uri): String {
-        val mimeTypeMap = MimeTypeMap.getSingleton()
-        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri)) ?: ""
-    }
-
-    private fun getFileName(uri: Uri): String {
-        var result = ""
-        if (uri.scheme == "content") {
-            val cursor = contentResolver.query(uri, null, null, null, null)
-            cursor?.use {
-                val nameColumnIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                if (nameColumnIndex != -1 && it.moveToFirst()) {
-                    result = it.getString(nameColumnIndex)
-                }
-            }
-        }
-        if (result.isEmpty()) {
-            result = uri.lastPathSegment ?: ""
-        }
-        Log.d("RESULT", "${result}")
-        return result
-    }
+//    private fun convertImageToBase64(imageUri: Uri): String {
+//        val inputStream = contentResolver.openInputStream(imageUri)
+//        val bytes = inputStream?.readBytes()
+//        inputStream?.close()
+//
+//        if (bytes != null) {
+//            val base64Image = Base64.encodeToString(bytes, Base64.DEFAULT)
+//            return base64Image
+//        }
+//
+//        return ""
+//    }
+//
+//    private fun getFileExtension(uri: Uri): String {
+//        val mimeTypeMap = MimeTypeMap.getSingleton()
+//        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri)) ?: ""
+//    }
+//
+//    private fun getFileName(uri: Uri): String {
+//        var result = ""
+//        if (uri.scheme == "content") {
+//            val cursor = contentResolver.query(uri, null, null, null, null)
+//            cursor?.use {
+//                val nameColumnIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+//                if (nameColumnIndex != -1 && it.moveToFirst()) {
+//                    result = it.getString(nameColumnIndex)
+//                }
+//            }
+//        }
+//        if (result.isEmpty()) {
+//            result = uri.lastPathSegment ?: ""
+//        }
+//        Log.d("RESULT", "${result}")
+//        return result
+//    }
 }

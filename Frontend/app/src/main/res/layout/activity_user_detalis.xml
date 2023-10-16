@@ -36,6 +36,13 @@
         android:textSize="25dp"
         android:textStyle="bold" />
 
+    <Button
+        android:id="@+id/connect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="CONNECT"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,12 +51,12 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/connect"
+            android:id="@+id/sendFiles"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginRight="30dp"
-            android:text="CONNECT"/>
+            android:text="SEND FILES"/>
 
         <Button
             android:id="@+id/showFiles"
@@ -57,7 +64,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="30dp"
-            android:text="SHOW FILES"/>
+            android:text="GET FILES"/>
+
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

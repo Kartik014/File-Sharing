@@ -25,7 +25,7 @@ class userNameAdapter(val context: Context, private var userList: List<String>, 
         holder.userNameText.text = userList[position]
         val name: String = userList[position]
 
-        val requestDetails = UserName(name)
+        val requestDetails = UserName(name, 0)
 
         holder.itemView.setOnClickListener {
 
