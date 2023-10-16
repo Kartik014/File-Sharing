@@ -130,10 +130,11 @@ exports.UploadFile = async (req, res) => {
             uploaderName: req.body.name,
             fileName: req.body.fileName,
             extension: req.body.extension,
-            fileData: req.body.fileData
+            fileData: req.body.fileData,
+            receiverID: req.body.receiverID
         })
 
-        await newFile.save({ wtimeout: 60000 })
+        await newFile.save({ wtimeout: 90000 })
 
         res.status(200).json({
             status: "file Saved",

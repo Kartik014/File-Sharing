@@ -43,6 +43,10 @@ const UserFileSchema = new mongoose.Schema({
     fileData: {
         type: String,
         required: true
+    },
+    receiverID: {
+        type: Number,
+        required: true
     }
 });
 
