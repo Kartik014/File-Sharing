@@ -73,7 +73,7 @@ exports.getConnectingUsers = async (req, res) => {
         const db = client.db(dbName)
         const collection = db.collection(connectionCollectionName)
 
-        const cursor = collection.find({receiverID: req.body.receiverID})
+        const cursor = collection.find({ receiverID: req.body.receiverID })
 
         await cursor.forEach(user => {
             userNames.push(user.requestSenderName)
@@ -98,33 +98,48 @@ exports.getConnectionInfo = async (req, res) => {
 
         const connection = await connectionCollection.findOne({ senderID: req.body.senderID, receiverID: req.body.receiverID })
 
-        if (connection) {
-            const filter = { _id: connection._id }
+        const filter = { _id: connection._id }
 
-            if (connection.connectionStatus === "Pending") {
-                const updateQuery = {
-                    $set: { connectionStatus: req.body.connectionStatus },
+        if (req.body.connectionStatus == "Accepted") {
+
+            if (connection) {
+
+                if (connection.connectionStatus === "Pending") {
+                    const updateQuery = {
+                        $set: { connectionStatus: req.body.connectionStatus },
+                    }
+                    await connectionCollection.updateOne(filter, updateQuery)
                 }
-                await connectionCollection.updateOne(filter, updateQuery)
-            }
 
-            const receiver = await Model.UserModel.findOne({ id: req.body.receiverID });
-            if (receiver) {
-                receiver.connections.push(req.body.senderID);
-                await receiver.save();
-                if (receiver.connections.includes(req.body.senderID)) {
-                    const sender = await Model.UserModel.findOne({ id: req.body.senderID });
-                    sender.connections.push(req.body.receiverID);
-                    await sender.save();
+                const receiver = await Model.UserModel.findOne({ id: req.body.receiverID });
+                if (receiver) {
+                    receiver.connections.push(req.body.senderID);
+                    await receiver.save();
+                    if (receiver.connections.includes(req.body.senderID)) {
+                        const sender = await Model.UserModel.findOne({ id: req.body.senderID });
+                        sender.connections.push(req.body.receiverID);
+                        await sender.save();
+                    }
                 }
+
+                await connectionCollection.deleteOne(filter)
+                return req.body.connectionStatus
+
+            } else {
+                console.error("Connection not found!!.")
+                return null
+
             }
+        } else if (req.body.connectionStatus == "Rejected") {
 
-            await connectionCollection.deleteOne(filter);
+            await connectionCollection.deleteOne(filter)
+            return req.body.connectionStatus
 
-            return req.body.connectionStatus;
         } else {
-            console.error("Connection not found.");
+
+            console.error("Connection not found.")
             return null
+
         }
 
     } catch (err) {
