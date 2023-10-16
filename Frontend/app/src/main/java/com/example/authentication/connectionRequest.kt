@@ -14,7 +14,7 @@ class connectionRequest : AppCompatActivity() {
     private lateinit var binding: ActivityConnectionRequestBinding
     private var receiverID: Long = 0
     private lateinit var connectionAdapter: connectionAdapter
-    private lateinit var requestedUserlist: List<String>
+    private lateinit var requestedUserlist: MutableList<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +30,7 @@ class connectionRequest : AppCompatActivity() {
         RetrofitBuilder.api.getConnectingNames(getConnectingUserList).enqueue(object: Callback<userNames> {
             override fun onResponse(call: Call<userNames>, response: Response<userNames>) {
                 if(response.code() == 200) {
-                    requestedUserlist = response.body()!!.userArray
+                    requestedUserlist = response.body()!!.userArray.toMutableList()
                     Log.d("RESPONSE", "$requestedUserlist")
                     connectionAdapter = connectionAdapter(this@connectionRequest, receiverID, requestedUserlist)
                     binding.connectionRequest.adapter = connectionAdapter

@@ -12,7 +12,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class userNameAdapter(val context: Context, private var userList: List<String>) : RecyclerView.Adapter<userNameAdapter.userNameViewHolder>() {
+class userNameAdapter(val context: Context, private var userList: List<String>, val id: Long, val userName: String) : RecyclerView.Adapter<userNameAdapter.userNameViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): userNameViewHolder {
 
@@ -38,6 +38,8 @@ class userNameAdapter(val context: Context, private var userList: List<String>) 
                         intent.putExtra("name", response.body()!!.userArray.name)
                         intent.putExtra("email", response.body()!!.userArray.email)
                         intent.putExtra("id", response.body()!!.userArray.id.toString())
+                        intent.putExtra("senderID", id)
+                        intent.putExtra("requestSenderName", userName)
 
                         context.startActivity(intent)
                     }

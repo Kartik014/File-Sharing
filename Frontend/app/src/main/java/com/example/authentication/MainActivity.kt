@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
                         userList = responseBody!!.userArray
                         Log.d("kartik", "userList: ${userList}")
                     }
-                    userNameAdapter = userNameAdapter(this@MainActivity, userList)
+                    userNameAdapter = userNameAdapter(this@MainActivity, userList, id, userName)
                     binding.displayFetchedData.adapter = userNameAdapter
                     userNameAdapter.notifyDataSetChanged()
                 }

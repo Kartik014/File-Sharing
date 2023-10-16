@@ -12,7 +12,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class connectionAdapter(val context: Context,val receiverID: Long, val requestedUserlist: List<String>): RecyclerView.Adapter<connectionAdapter.connectionRequestViewHolder>() {
+class connectionAdapter(val context: Context,val receiverID: Long, val requestedUserlist: MutableList<String>): RecyclerView.Adapter<connectionAdapter.connectionRequestViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): connectionRequestViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.requested_connection_display, parent, false)
@@ -46,7 +46,7 @@ class connectionAdapter(val context: Context,val receiverID: Long, val requested
 
         })
         holder.acceptingButton.setOnClickListener {
-            val requestConnect = requestConnect(senderID, receiverID)
+            val requestConnect = requestConnect(senderID, receiverID, "", "Accepted")
             RetrofitBuilder.api.responseConnection(requestConnect).enqueue(object: Callback<ResponseMessage>{
                 override fun onResponse(
                     call: Call<ResponseMessage>,
@@ -56,6 +56,39 @@ class connectionAdapter(val context: Context,val receiverID: Long, val requested
                         val responseMessage = response.body()
                         if (responseMessage != null) {
                             Log.d("RESPONSE", responseMessage.message)
+
+                            requestedUserlist.removeAt(position)
+                            notifyItemRemoved(position)
+                            notifyItemRangeChanged(position, requestedUserlist.size)
+                        } else {
+                            Log.d("ERROR", "Response body is null")
+                        }
+                    } else {
+                        Log.d("ERROR", "Response code: ${response.code()}")
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseMessage>, t: Throwable) {
+                    Log.d("ERROR", "${t.message}")
+                }
+
+            })
+        }
+
+        holder.rejectingButton.setOnClickListener {
+            val requestConnect = requestConnect(senderID, receiverID, "", "Rejected")
+            RetrofitBuilder.api.responseConnection(requestConnect).enqueue(object: Callback<ResponseMessage>{
+                override fun onResponse(
+                    call: Call<ResponseMessage>,
+                    response: Response<ResponseMessage>,
+                ) {
+                    if (response.isSuccessful) {
+                        val responseMessage = response.body()
+                        if (responseMessage != null) {
+                            Log.d("RESPONSE", responseMessage.message)
+                            requestedUserlist.removeAt(position)
+                            notifyItemRemoved(position)
+                            notifyItemRangeChanged(position, requestedUserlist.size)
                         } else {
                             Log.d("ERROR", "Response body is null")
                         }

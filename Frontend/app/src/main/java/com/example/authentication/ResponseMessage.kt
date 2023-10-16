@@ -29,6 +29,6 @@ data class fileDownloadBody(val name: String, val id: Long, val fileName: String
 data class downloadResponse(val status: String, val data: FileResponse)
 data class FileResponse(val fileData: String, val __v: Int)
 
-data class requestConnect(val senderID: Long, val receiverID: Long)
+data class requestConnect(val senderID: Long, val receiverID: Long, val requestSenderName: String, val connectionStatus: String)
 
 data class getConnectingUserList(val receiverID: Long)
