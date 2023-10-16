@@ -220,7 +220,7 @@ exports.connection_Request = async (req, res) => {
 exports.getConnectingNames = async(req, res) => {
 
     try{
-        console.log("RECEIVERID:",req.body.receiverID)
+        
         const requestSenderNames = await user_database.getConnectingUsers(req)
 
         res.status(200).json({
