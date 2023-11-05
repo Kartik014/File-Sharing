@@ -43,4 +43,8 @@ apiRouter
     .route('/responseConnection')
     .post(Function.connection_Response)
 
+apiRouter
+    .route('/getConnectedUsers')
+    .post(Function.getConnectedUsers)
+
 module.exports = apiRouter

@@ -148,3 +148,25 @@ exports.getConnectionInfo = async (req, res) => {
         client.close()
     }
 }
+
+exports.getConnectedUsers = async (req, res) => {
+
+    try {
+
+        await client.connect()
+
+        const db = client.db(dbName)
+        const collection = db.collection(userCollectionName)
+
+        const user = await collection.findOne({ id: req.body.id })
+
+        const connectedUsersIDs = await user.connections
+
+        return connectedUsersIDs
+
+    } catch (err) {
+        console.log(err)
+    } finally {
+        client.close()
+    }
+}

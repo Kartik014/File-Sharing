@@ -11,7 +11,7 @@ const client = new MongoClient(dataBase, {
     useUnifiedTopology: true
 })
 
-exports.fetchFileName = async (req, res) => {
+exports.fetchFileName = async (req) => {
 
     const receiverId = req.body.receiverID
 
@@ -52,7 +52,7 @@ exports.fetchFileName = async (req, res) => {
     }
 }
 
-exports.downloadFile = async (req, res) => {
+exports.downloadFile = async (req) => {
 
     try {
 

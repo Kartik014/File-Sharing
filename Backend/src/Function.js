@@ -90,6 +90,7 @@ exports.getAllUsers = async (req, res) => {
         res.status(200).json({
             userArray: userNames
         })
+        console.log(userNames)
 
     } catch (err) {
 
@@ -109,6 +110,7 @@ exports.getUserDetails = async (req, res) => {
             status: "Details fetched successfully",
             userArray: user
         })
+        console.log(user)
 
     } catch (err) {
 
@@ -257,5 +259,25 @@ exports.connection_Response = async (req, res) => {
             message: err.message
         })
 
+    }
+}
+
+exports.getConnectedUsers = async (req, res) => {
+
+    try {
+
+        const connectedIDs = await user_database.getConnectedUsers(req)
+
+        res.status(200).json({
+            status: "Success",
+            ids: connectedIDs
+        })
+
+    } catch (err) {
+
+        res.status(400).json({
+            status: "Failed to fetch data"
+        })
+        
     }
 }
