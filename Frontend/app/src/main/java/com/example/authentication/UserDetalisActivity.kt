@@ -8,6 +8,7 @@ import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.util.Base64
 import android.util.Log
+import android.view.View
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -23,11 +24,12 @@ class UserDetalisActivity : AppCompatActivity() {
     private lateinit var binding: ActivityUserDetalisBinding
     private var name: String? =null
     private var email: String? =null
-    private var id: String? =null
+    private var receiverID: String? =null
     private var senderID: Long? =0
     private var requestSenderName: String? =null
     private lateinit var userFilesAdapter: UserFilesAdapter
     private lateinit var fileList: List<String>
+    private lateinit var connections: List<Long>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,18 +38,27 @@ class UserDetalisActivity : AppCompatActivity() {
 
         name = intent.getStringExtra("name")
         email = intent.getStringExtra("email")
-        id = intent.getStringExtra("id")
+        receiverID = intent.getStringExtra("id")
         senderID = intent.getLongExtra("senderID", 0)
         requestSenderName = intent.getStringExtra("requestSenderName")
+        connections = intent.getSerializableExtra("connections") as List<Long>
+
+        Log.d("DETAILS", "CONNECTIONS: ${senderID}")
 
         binding.name.text = name.toString()
         binding.email.text = email.toString()
-        binding.id.text = id.toString()
+        binding.id.text = receiverID.toString()
 
         val userName = UserName(name.toString(), senderID!!.toLong())
 
+        for (id in connections) {
+            if (senderID == id) {
+                binding.buttonContainer.visibility = View.VISIBLE
+            }
+        }
+
         binding.connect.setOnClickListener {
-            val requestConnect = requestConnect(senderID!!.toLong(), id!!.toLong(), requestSenderName.toString(), "")
+            val requestConnect = requestConnect(senderID!!.toLong(), receiverID!!.toLong(), requestSenderName.toString(), "")
             RetrofitBuilder.api.requestConnection(requestConnect).enqueue(object: Callback<ResponseMessage>{
                 override fun onResponse(
                     call: Call<ResponseMessage>,
@@ -71,6 +82,7 @@ class UserDetalisActivity : AppCompatActivity() {
         }
 
         binding.showFiles.setOnClickListener {
+            binding.progressBar.visibility = View.VISIBLE
             Log.d("RESPONSE","senderID: ${senderID.toString()}")
             RetrofitBuilder.api.getFileDetails(userName).enqueue(object: Callback<fileNames>{
                 override fun onResponse(call: Call<fileNames>, response: Response<fileNames>) {
@@ -79,14 +91,16 @@ class UserDetalisActivity : AppCompatActivity() {
                         if(responseBody != null){
                             fileList = responseBody?.fileArray ?: emptyList()
                         }
-                        userFilesAdapter = UserFilesAdapter(this@UserDetalisActivity,fileList, name.toString(), senderID!!.toLong(), id!!.toLong())
+                        userFilesAdapter = UserFilesAdapter(this@UserDetalisActivity,fileList, name.toString(), senderID!!.toLong(), receiverID!!.toLong())
                         binding.userFilesContainer.adapter = userFilesAdapter
+                        binding.progressBar.visibility = View.GONE
                         userFilesAdapter.notifyDataSetChanged()
                     }
                 }
 
                 override fun onFailure(call: Call<fileNames>, t: Throwable) {
                     Log.d("ERROR", "${t.message}")
+                    binding.progressBar.visibility = View.GONE
                 }
 
             })
@@ -104,7 +118,7 @@ class UserDetalisActivity : AppCompatActivity() {
                 val fileName = getFileName(selectedImageUri)
                 val fileExtension = getFileExtension(selectedImageUri)
 
-                val uploadFileData = uploadFileClass(requestSenderName.toString(), fileName, fileExtension, base64Image, id!!.toLong())
+                val uploadFileData = uploadFileClass(requestSenderName.toString(), fileName, fileExtension, base64Image, receiverID!!.toLong())
                 RetrofitBuilder.api.uploadFile(uploadFileData)
                     .enqueue(object : Callback<ResponseMessage> {
                         override fun onResponse(

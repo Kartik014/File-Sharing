@@ -13,6 +13,7 @@ data class UserArray(
     val email: String,
     val id: Long,
     val name: String,
+    val connections: List<Long>
 )
 
 data class uploadFileClass(
@@ -20,16 +21,26 @@ data class uploadFileClass(
     val fileName: String,
     val extension: String,
     val fileData: String,
-    val receiverID: Long
+    val receiverID: Long,
 )
 
 data class fileNames(val fileArray: List<String>)
 
-data class fileDownloadBody(val name: String, val senderID: Long, val fileName: String, val receiverID: Long)
+data class fileDownloadBody(
+    val name: String,
+    val senderID: Long,
+    val fileName: String,
+    val receiverID: Long,
+)
 
 data class downloadResponse(val status: String, val data: FileResponse)
 data class FileResponse(val fileData: String, val __v: Int)
 
-data class requestConnect(val senderID: Long, val receiverID: Long, val requestSenderName: String, val connectionStatus: String)
+data class requestConnect(
+    val senderID: Long,
+    val receiverID: Long,
+    val requestSenderName: String,
+    val connectionStatus: String,
+)
 
 data class getConnectingUserList(val receiverID: Long)

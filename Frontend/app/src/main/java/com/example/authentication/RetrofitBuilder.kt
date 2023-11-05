@@ -5,9 +5,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 private val client = OkHttpClient.Builder()
-    .connectTimeout(90, java.util.concurrent.TimeUnit.SECONDS) // Set connection timeout to 30 seconds
+    .connectTimeout(90, java.util.concurrent.TimeUnit.SECONDS)
     .readTimeout(90, java.util.concurrent.TimeUnit.SECONDS)
-    .writeTimeout(90, java.util.concurrent.TimeUnit.SECONDS)// Set read timeout to 30 seconds
+    .writeTimeout(90, java.util.concurrent.TimeUnit.SECONDS)
     .build()
 
 object RetrofitBuilder {

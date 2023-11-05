@@ -5,28 +5,47 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:gravity="center"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context=".LogIn">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="50dp"
+        android:src="@drawable/logo" />
 
     <EditText
         android:id="@+id/email"
-        android:layout_width="191dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Email"
+        android:textColorHint="@color/black"
+        android:textColor="@color/black"
+        android:layout_margin="5dp"
         android:padding="20dp" />
 
     <EditText
         android:id="@+id/password"
-        android:layout_width="191dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:textColor="@color/black"
         android:hint="Password"
+        android:textColorHint="@color/black"
+        android:inputType="textPassword"
         android:padding="20dp" />
 
     <Button
         android:id="@+id/logIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textStyle="bold"
         android:layout_margin="20dp"
         android:text="Log In" />
 
@@ -35,6 +54,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Don't have an account?? SignUp!!"
+        android:layout_gravity="center"
+        android:textColor="@color/black"
+        android:textStyle="bold"
         android:textSize="10dp"
         android:layout_marginTop="20dp"/>
 </LinearLayout>
